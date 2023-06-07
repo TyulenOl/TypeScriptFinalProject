@@ -66,7 +66,6 @@ export default defineComponent({
 }
 
 .product__title {
-  font-style: normal;
   font-weight: 500;
   font-size: 20px;
   line-height: 24px;
@@ -83,7 +82,6 @@ export default defineComponent({
 }
 
 .product__price {
-  font-style: normal;
   font-weight: 500;
   font-size: 20px;
   line-height: 24px;
@@ -156,7 +154,6 @@ export default defineComponent({
 }
 
 .rating__text {
-  font-style: normal;
   font-weight: 500;
   font-size: 20px;
   line-height: 24px;

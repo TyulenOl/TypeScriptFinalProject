@@ -64,6 +64,6 @@ img {
 
 .container {
   margin: 0 auto;
-  padding: 16px;
+  padding: 40px 16px 16px;
 }
 </style>

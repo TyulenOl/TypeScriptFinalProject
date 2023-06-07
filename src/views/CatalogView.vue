@@ -1,7 +1,8 @@
 <template>
+  <search-input v-model:text="searchText" />
   <select-sort :options="options" v-model:currentSortType="currentSortType"/>
   <div class="products">
-    <product-card v-for="product in sortedProducts" :key="product.id" :product="product"/>
+    <product-card v-for="product in sortedAndFilteredProducts" :key="product.id" :product="product"/>
   </div>
 </template>
 
@@ -12,9 +13,13 @@ import axios from "axios";
 import {IProduct} from "@/interfaces/product";
 import SelectSort from "@/components/SelectSort.vue";
 import {ISortOption} from "@/interfaces/sortOption";
+import CustomInput from "@/UI/SearchInput.vue";
+import SearchInput from "@/UI/SearchInput.vue";
 
 export default defineComponent({
   components: {
+    SearchInput,
+    CustomInput,
     ProductCard,
     SelectSort
   },
@@ -30,6 +35,7 @@ export default defineComponent({
       }
     }
 
+    const searchText = ref<string>("")
     const products = reactive<{ data: IProduct[] }>({data: []});
     const currentSortType = ref<'price' | 'title' | null>(null);
     const options = reactive<ISortOption[]>([{
@@ -48,15 +54,19 @@ export default defineComponent({
             : 0;
       });
     });
+    const sortedAndFilteredProducts = computed(() => {
+      return sortedProducts.value.filter(product => product.title.toLowerCase().includes(searchText.value.toLowerCase().trim()))
+    })
 
     onMounted(async () => {
       await getProducts();
     });
 
     return {
+      searchText,
       currentSortType,
       options,
-      sortedProducts,
+      sortedAndFilteredProducts,
     };
   }
 });

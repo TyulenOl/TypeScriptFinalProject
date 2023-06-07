@@ -1,15 +1,15 @@
 <template>
-    <lable class="select-container" for="select">
-      <select id="select" class="sort-select" required="required" :value="currentSortType" @change="changeSorting">
-        <option class="sort-select__option" disabled value="" selected="selected">Выберите</option>
-        <option class="sort-select__option" v-for="option in options" :key="option.value" :value="option.value">
-          {{ option.name }}
-        </option>
-      </select>
-      <svg class="arrow">
-          <polyline points="1 1 5 5 9 1" />
-      </svg>
-    </lable>
+  <lable class="select-container" for="select">
+    <select id="select" class="sort-select" required="required" :value="currentSortType" @change="changeSorting">
+      <option class="sort-select__option" disabled value="" selected="selected">Выберите</option>
+      <option class="sort-select__option" v-for="option in options" :key="option.value" :value="option.value">
+        {{ option.name }}
+      </option>
+    </select>
+    <svg class="arrow">
+      <polyline points="1 1 5 5 9 1"/>
+    </svg>
+  </lable>
 </template>
 
 <script lang="ts">
