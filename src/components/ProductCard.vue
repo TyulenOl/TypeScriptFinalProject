@@ -26,6 +26,7 @@ import {defineComponent, PropType} from "vue";
 import {IProduct} from "@/interfaces/product";
 
 export default defineComponent({
+  name: "ProductCard",
   props: {
     product: {required: true, type: Object as PropType<IProduct>}
   },
@@ -45,7 +46,7 @@ export default defineComponent({
   justify-content: space-between;
   border: 1px solid #eee;
   border-radius: 22px;
-  box-shadow: rgba(0, 0, 0, 0.06) 0 2px 4px;
+  box-shadow: rgba(0, 0, 0, 0.12) 0 2px 4px;
   transition: all .3s ease-in-out;
 }
 
