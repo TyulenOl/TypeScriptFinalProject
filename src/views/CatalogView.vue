@@ -1,10 +1,10 @@
 <template>
-  <search-input v-model:text="searchText" />
+  <search-input v-model:text="searchText"/>
   <select-sort :options="options" v-model:currentSortType="currentSortType"/>
   <div class="products" v-if="sortedAndFilteredProducts">
     <product-card v-for="product in sortedAndFilteredProducts" :key="product.id" :product="product"/>
   </div>
-  <loading v-else />
+  <loading v-else/>
 </template>
 
 <script lang="ts">
@@ -16,6 +16,7 @@ import SelectSort from "@/components/SelectSort.vue";
 import {ISortOption} from "@/interfaces/sortOption";
 import CustomInput from "@/UI/SearchInput.vue";
 import SearchInput from "@/UI/SearchInput.vue";
+import {useFavoritesStore} from "@/pinia";
 
 export default defineComponent({
   components: {
@@ -36,9 +37,10 @@ export default defineComponent({
       }
     }
 
-    const searchText = ref<string>("")
+    const searchText = ref<string>("");
     const currentSortType = ref<'price' | 'title' | null>(null);
     const products = reactive<{ data: IProduct[] }>({data: []});
+    const favoritesStore = useFavoritesStore();
     const options = reactive<ISortOption[]>([{
       value: 'price',
       name: 'По цене'
@@ -56,12 +58,18 @@ export default defineComponent({
       });
     });
     const sortedAndFilteredProducts = computed(() => {
-      return sortedProducts.value.filter(product => product.title.toLowerCase().includes(searchText.value.toLowerCase().trim()))
-    })
-
-    onMounted(async () => {
-      await getProducts();
+      return sortedProducts.value.filter(product => product.title.toLowerCase().includes(searchText.value.toLowerCase().trim()));
     });
+
+    onMounted(() => {
+          getProducts();
+          if (localStorage.getItem('favoritesProducts')) {
+            const storedFavoritesProducts = localStorage.getItem('favoritesProducts');
+            if (typeof storedFavoritesProducts === 'string')
+              favoritesStore.favorites = JSON.parse(storedFavoritesProducts);
+          }
+        }
+    );
 
     return {
       searchText,

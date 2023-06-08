@@ -14,8 +14,8 @@ export default defineComponent({
     text: {type: String, required: true}
   },
   setup(props, context) {
-    function updateInputValue(event: { target: { value: string } }): void {
-      context.emit('update:text', event.target.value);
+    function updateInputValue(event: Event): void {
+      context.emit('update:text', (event.target as HTMLInputElement).value);
     }
 
     return {
@@ -29,7 +29,7 @@ export default defineComponent({
 .form {
   position: relative;
   margin: 16px auto;
-  max-width: 500px;
+  max-width: 800px;
   min-width: 250px;
 }
 

@@ -1,0 +1,39 @@
+<template>
+  <svg class="favorite" width="28" height="26"
+       viewBox="0 0 20 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path
+        d="M9.75052 18C9.44944 17.9996 9.15545 17.9086 8.90677 17.7389C5.22287 15.2381 3.62771 13.5234 2.74786 12.4514C0.872864 10.1663 -0.024792 7.82016 0.000520508 5.27953C0.0300518 2.36813 2.36583 0 5.2074 0C7.27365 0 8.70474 1.16391 9.53818 2.13328C9.56458 2.16368 9.5972 2.18805 9.63383 2.20476C9.67047 2.22146 9.71026 2.23011 9.75052 2.23011C9.79078 2.23011 9.83058 2.22146 9.86721 2.20476C9.90385 2.18805 9.93646 2.16368 9.96287 2.13328C10.7963 1.16297 12.2274 0 14.2936 0C17.1352 0 19.471 2.36813 19.5005 5.28C19.5258 7.82109 18.6272 10.1672 16.7532 12.4519C15.8733 13.5239 14.2782 15.2386 10.5943 17.7394C10.3455 17.9089 10.0516 17.9998 9.75052 18V18Z"
+        fill="#1A1F16"/>
+  </svg>
+</template>
+
+<script lang="ts">
+import {defineComponent} from "vue";
+
+export default defineComponent({
+  name: "FavoriteButton",
+});
+</script>
+
+<style scoped>
+.favorite {
+  z-index: 1;
+}
+
+.favorite path {
+  cursor: pointer;
+  transition: all .15s ease-in-out;
+}
+
+.favorite:hover path {
+  fill: #40453d;
+}
+
+.favorite_active path {
+  fill: #E5252C;
+}
+
+.favorite_active:hover path {
+  fill: #FF8A8E;
+}
+</style>

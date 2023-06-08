@@ -18,6 +18,7 @@ export default {
   width: 34px;
   height: 34px;
   transition: all .15s ease-in-out;
+  z-index: 1;
 }
 
 .product__add-to-cart:hover {

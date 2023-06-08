@@ -16,7 +16,10 @@
         <p class="description">
           {{ product.description }}
         </p>
-        <add-to-cart-button class="add-to-cart-btn"/>
+        <div class="buttons">
+          <favorite-button :product="product" @click="changeFavoriteState" :class="{favorite_active: favorite}"/>
+          <add-to-cart-button class="add-to-cart-btn"/>
+        </div>
       </div>
     </div>
   </div>
@@ -28,11 +31,10 @@ import {defineComponent, onMounted, ref} from "vue";
 import axios from "axios";
 import {IProduct} from "@/interfaces/product";
 import {useRoute, useRouter} from "vue-router";
+import {useFavoritesStore} from "@/pinia";
 
 export default defineComponent({
   name: "ProductPage",
-  components: {},
-
   setup() {
     async function getProduct(): Promise<void> {
       try {
@@ -44,21 +46,51 @@ export default defineComponent({
         console.error(e);
       }
     }
+
     function goBack(): void {
-      router.back()
+      router.back();
     }
 
+    function changeFavoriteState() {
+      if (product.value)
+        if (favorite.value) {
+          favoritesStore.deleteFavoriteProduct(product.value.id);
+          favorite.value = !favorite.value;
+        } else {
+          favoritesStore.addFavoriteProduct(product.value.id);
+          favorite.value = !favorite.value;
+        }
+      saveFavorite();
+    }
+
+    function saveFavorite() {
+      const parsed = JSON.stringify(favoritesStore.getFavoritesProducts);
+      localStorage.setItem('favoritesProducts', parsed);
+    }
+
+    const favorite = ref<boolean>(false);
     const product = ref<IProduct | null>(null);
     const route = useRoute();
     const router = useRouter();
+    const favoritesStore = useFavoritesStore();
 
     onMounted(async () => {
       await getProduct();
+
+      if (localStorage.getItem('favoritesProducts')) {
+        const storedFavoritesProducts = localStorage.getItem('favoritesProducts');
+        if (typeof storedFavoritesProducts === 'string')
+          favoritesStore.favorites = JSON.parse(storedFavoritesProducts);
+      }
+
+      favorite.value = favoritesStore.getFavoritesProducts.some(id => product.value && id == product.value.id);
     });
 
     return {
       product,
-      goBack
+      goBack,
+      favorite,
+      changeFavoriteState
     };
   }
 });
@@ -88,7 +120,7 @@ export default defineComponent({
   transition: all .3s ease-in-out;
 }
 
-.back-button:hover .back-button__arrow{
+.back-button:hover .back-button__arrow {
   transform: translateX(-5px);
 }
 
@@ -146,5 +178,11 @@ export default defineComponent({
   width: 44px;
   height: 44px;
   background-size: 24px;
+}
+
+.buttons {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 </style>

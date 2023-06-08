@@ -25,8 +25,8 @@ export default defineComponent({
     }
   },
   setup(props, context) {
-    function changeSorting(event: { target: { value: string } }): void {
-      context.emit('update:currentSortType', event.target.value);
+    function changeSorting(event: Event): void {
+      context.emit('update:currentSortType', (event.target as HTMLInputElement).value);
     }
 
     return {

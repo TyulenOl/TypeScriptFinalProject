@@ -1,5 +1,5 @@
 <template>
-  <router-link class="product" :to="`/product/${product.id}`">
+  <div class="product">
     <div class="product__top-part">
       <img class="product__image" :src="product.image" alt="">
       <h3 class="product__title">{{ product.title }}</h3>
@@ -11,31 +11,59 @@
       </div>
       <div class="product__price-and-cart">
         <p class="product__price">$ {{ product.price }}</p>
+        <favorite-button :product="product" @click="changeFavoriteState" :class="{favorite_active: favorite}"/>
         <add-to-cart-button/>
       </div>
     </div>
-  </router-link>
+    <router-link class="product__link" :to="`/product/${product.id}`"/>
+  </div>
 </template>
 
 <script lang="ts">
-import {defineComponent, PropType} from "vue";
+import {defineComponent, onMounted, PropType, ref} from "vue";
 import {IProduct} from "@/interfaces/product";
+import {useFavoritesStore} from "@/pinia";
 
 export default defineComponent({
   name: "ProductCard",
-  components: {},
-
   props: {
-    product: {required: true, type: Object as PropType<IProduct>}
+    product: {required: true, type: Object as PropType<IProduct>},
   },
-  setup() {
+  setup(props) {
+    function changeFavoriteState() {
+      if (favorite.value) {
+        favoritesStore.deleteFavoriteProduct(props.product.id);
+        favorite.value = !favorite.value;
+      } else {
+        favoritesStore.addFavoriteProduct(props.product.id);
+        favorite.value = !favorite.value;
+      }
+      saveFavorite();
+    }
 
+    function saveFavorite() {
+      const parsed = JSON.stringify(favoritesStore.getFavoritesProducts);
+      localStorage.setItem('favoritesProducts', parsed);
+    }
+
+    const favorite = ref<boolean>(false);
+    const favoritesStore = useFavoritesStore();
+
+    onMounted(() => {
+      favorite.value = favoritesStore.getFavoritesProducts.some(id => id == props.product.id);
+    });
+
+    return {
+      changeFavoriteState,
+      favorite
+    };
   }
 });
 </script>
 
 <style scoped>
 .product {
+  position: relative;
   width: 324px;
   padding: 16px;
   display: flex;
@@ -95,5 +123,14 @@ export default defineComponent({
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+}
+
+.product__link {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
 }
 </style>
