@@ -1,7 +1,7 @@
 <template>
   <lable class="select-container" for="select">
     <select id="select" class="sort-select" required="required" :value="currentSortType" @change="changeSorting">
-      <option class="sort-select__option" disabled value="" selected="selected">Выберите</option>
+      <option class="sort-select__option" disabled value="" selected="selected">Выберите сортировку</option>
       <option class="sort-select__option" v-for="option in options" :key="option.value" :value="option.value">
         {{ option.name }}
       </option>
@@ -33,8 +33,7 @@ export default defineComponent({
       changeSorting
     };
   }
-})
-;
+});
 </script>
 
 <style scoped>
@@ -66,7 +65,7 @@ export default defineComponent({
   width: 100%;
   border: 1px solid #e8eaed;
   border-radius: 5px;
-  background: #fff;
+  background: #FFFFFF;
   box-shadow: 0 1px 3px -2px #9098a9;
   cursor: pointer;
   font-family: inherit;

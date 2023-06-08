@@ -1,8 +1,18 @@
 <template>
   <search-input v-model:text="searchText"/>
-  <select-sort :options="options" v-model:currentSortType="currentSortType"/>
-  <div class="products" v-if="sortedAndFilteredProducts">
-    <product-card v-for="product in sortedAndFilteredProducts" :key="product.id" :product="product"/>
+  <div class="catalog-container" v-if="filteredProductsByCategories.length">
+    <div class="left-side">
+      <select-sort :options="sortingOptions" v-model:currentSortType="currentSortType"/>
+      <categories v-model:chosenCategories="chosenCategories" :options="categoriesOptions"/>
+    </div>
+    <div class="middle-part">
+      <div class="products">
+        <product-card v-for="product in filteredProductsByCategories" :key="product.id" :product="product"/>
+      </div>
+    </div>
+    <div class="right-part">
+
+    </div>
   </div>
   <loading v-else/>
 </template>
@@ -17,15 +27,17 @@ import {ISortOption} from "@/interfaces/sortOption";
 import CustomInput from "@/UI/SearchInput.vue";
 import SearchInput from "@/UI/SearchInput.vue";
 import {useFavoritesStore} from "@/pinia";
+import Categories from "@/components/Categories.vue";
 
 export default defineComponent({
   components: {
+    Categories,
     SearchInput,
     CustomInput,
     ProductCard,
-    SelectSort
+    SelectSort,
   },
-  setup: function () {
+  setup() {
     async function getProducts(): Promise<void> {
       try {
         const response = await axios.get<IProduct[]>("https://fakestoreapi.com/products");
@@ -37,19 +49,12 @@ export default defineComponent({
       }
     }
 
-    const searchText = ref<string>("");
-    const currentSortType = ref<'price' | 'title' | null>(null);
-    const products = reactive<{ data: IProduct[] }>({data: []});
-    const favoritesStore = useFavoritesStore();
-    const options = reactive<ISortOption[]>([{
-      value: 'price',
-      name: 'По цене'
-    }, {
-      value: 'title',
-      name: 'По алфавиту'
-    }]);
-
-    const sortedProducts = computed(() => {
+    const categoriesOptions = computed<string[]>(() => {
+      const categories = Array.from(new Set(filteredBySearchProducts.value.map(product => product.category)
+          .sort((srt1, srt2) => srt1.localeCompare(srt2))));
+      return favoritesStore.getFavoritesProducts.length ? [...categories, 'favorites'] : categories;
+    });
+    const sortedProducts = computed<IProduct[]>(() => {
       if (!currentSortType.value) return products.data;
       return [...products.data].sort((prod1, prod2) => {
         return currentSortType.value
@@ -57,12 +62,35 @@ export default defineComponent({
             : 0;
       });
     });
-    const sortedAndFilteredProducts = computed(() => {
-      return sortedProducts.value.filter(product => product.title.toLowerCase().includes(searchText.value.toLowerCase().trim()));
+    const filteredBySearchProducts = computed<IProduct[]>(() => {
+      return sortedProducts.value
+          .filter(product => product.title.toLowerCase().includes(searchText.value.toLowerCase().trim()));
+    });
+    const filteredProductsByCategories = computed<IProduct[]>(() => {
+      if (!chosenCategories.value.length) return filteredBySearchProducts.value;
+      return filteredBySearchProducts.value.filter((product) => {
+        return chosenCategories.value.includes('favorites')
+            ? chosenCategories.value.includes(product.category) || favoritesStore.getFavoritesProducts.includes(product.id)
+            : chosenCategories.value.includes(product.category);
+      });
     });
 
-    onMounted(() => {
-          getProducts();
+    const searchText = ref<string>("");
+    const chosenCategories = ref<string[]>([]);
+    const currentSortType = ref<'price' | 'title' | null>(null);
+    const products = reactive<{ data: IProduct[] }>({data: []});
+    const favoritesStore = useFavoritesStore();
+    const sortingOptions = reactive<ISortOption[]>([{
+      value: 'price',
+      name: 'По цене'
+    }, {
+      value: 'title',
+      name: 'По алфавиту'
+    }]);
+
+    onMounted(async () => {
+          await getProducts();
+
           if (localStorage.getItem('favoritesProducts')) {
             const storedFavoritesProducts = localStorage.getItem('favoritesProducts');
             if (typeof storedFavoritesProducts === 'string')
@@ -74,8 +102,10 @@ export default defineComponent({
     return {
       searchText,
       currentSortType,
-      options,
-      sortedAndFilteredProducts,
+      sortingOptions,
+      filteredProductsByCategories,
+      chosenCategories,
+      categoriesOptions,
     };
   }
 });
@@ -87,5 +117,15 @@ export default defineComponent({
   display: flex;
   flex-wrap: wrap;
   gap: 16px;
+}
+.catalog-container {
+  display: grid;
+  grid-template-columns: auto auto 1fr;
+}
+
+.left-side {
+  display: flex;
+  flex-direction: column;
+  margin-right: 32px;
 }
 </style>

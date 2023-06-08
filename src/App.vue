@@ -60,6 +60,7 @@ img {
 
 #app {
   font-family: 'Muller', Helvetica, Arial, sans-serif;
+  accent-color: #12805D;
 }
 
 .container {

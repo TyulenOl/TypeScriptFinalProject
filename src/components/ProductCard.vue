@@ -64,7 +64,7 @@ export default defineComponent({
 <style scoped>
 .product {
   position: relative;
-  width: 324px;
+  width: 280px;
   padding: 16px;
   display: flex;
   flex-direction: column;
