@@ -1,24 +1,20 @@
 <template>
-  <div class="product">
+  <router-link class="product" :to="`/product/${product.id}`">
     <div class="product__top-part">
       <img class="product__image" :src="product.image" alt="">
       <h3 class="product__title">{{ product.title }}</h3>
     </div>
     <div class="product__bottom-part">
       <div class="product__statistics">
-        <div class="rating">
-          <meter class="rating__stars" min="0" max="5" :value="product.rating.rate"
-                 :title="`Рейтинг ${product.rating.rate}`"/>
-          <span class="rating__text">{{ product.rating.rate }}/5</span>
-        </div>
+        <rating :rate="product.rating.rate"/>
         <span class="rating__reviews">{{ product.rating.count }} отзывов</span>
       </div>
       <div class="product__price-and-cart">
-        <p class="product__price">{{ product.price }}$</p>
-        <button class="product__add-to-cart"/>
+        <p class="product__price">$ {{ product.price }}</p>
+        <add-to-cart-button/>
       </div>
     </div>
-  </div>
+  </router-link>
 </template>
 
 <script lang="ts">
@@ -27,6 +23,8 @@ import {IProduct} from "@/interfaces/product";
 
 export default defineComponent({
   name: "ProductCard",
+  components: {},
+
   props: {
     product: {required: true, type: Object as PropType<IProduct>}
   },
@@ -88,77 +86,8 @@ export default defineComponent({
   color: #1A1F16;
 }
 
-.product__add-to-cart {
-  cursor: pointer;
-  background: #1A1F16 url("@/assets/images/bag-add.svg") no-repeat center;
-  background-size: 15px;
-  border: none;
-  border-radius: 9px;
-  width: 34px;
-  height: 34px;
-  transition: all .15s ease-in-out;
-}
-
-.product__add-to-cart:hover {
-  background-color: #40453d;
-}
-
-.product__add-to-cart:active {
-  background-color: #12805D;
-}
-
-.product__add-to-cart_added {
-  background: #02D693 url("@/assets/images/bag-added.svg") no-repeat center;
-}
-
-.product__add-to-cart_added:hover {
-  background-color: #12805D;
-}
-
-.product__add-to-cart_added:active {
-  background-color: #E5252C;
-}
-
 .product__statistics {
   margin-bottom: 8px;
-}
-
-.rating {
-  display: flex;
-  align-items: center;
-  margin-bottom: 4px;
-}
-
-.rating__stars {
-  position: relative;
-  appearance: none;
-  color: transparent;
-  width: auto;
-  display: block;
-  vertical-align: center;
-  margin-right: 24px;
-  margin-bottom: 8px;
-}
-
-.rating__stars::before {
-  font-size: 24px;
-  --percent: calc(v-bind('product.rating.rate') / 5 * 100%);
-  content: '★★★★★';
-  position: relative;
-  top: 0;
-  left: 0;
-  color: rgba(0, 0, 0, 0.2);
-  background: linear-gradient(90deg, #12805D var(--percent), rgba(0, 0, 0, 0.2) var(--percent));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-.rating__text {
-  font-weight: 500;
-  font-size: 20px;
-  line-height: 24px;
-  letter-spacing: -0.02em;
-  color: #12805D;
 }
 
 .product__price-and-cart {

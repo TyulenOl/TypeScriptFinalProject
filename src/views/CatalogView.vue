@@ -1,9 +1,10 @@
 <template>
   <search-input v-model:text="searchText" />
   <select-sort :options="options" v-model:currentSortType="currentSortType"/>
-  <div class="products">
+  <div class="products" v-if="sortedAndFilteredProducts">
     <product-card v-for="product in sortedAndFilteredProducts" :key="product.id" :product="product"/>
   </div>
+  <loading v-else />
 </template>
 
 <script lang="ts">
@@ -36,8 +37,8 @@ export default defineComponent({
     }
 
     const searchText = ref<string>("")
-    const products = reactive<{ data: IProduct[] }>({data: []});
     const currentSortType = ref<'price' | 'title' | null>(null);
+    const products = reactive<{ data: IProduct[] }>({data: []});
     const options = reactive<ISortOption[]>([{
       value: 'price',
       name: 'По цене'
