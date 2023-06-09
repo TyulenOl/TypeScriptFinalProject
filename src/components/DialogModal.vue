@@ -1,7 +1,7 @@
 <template>
   <div class="dialog" @click="$emit('hideDialog')" v-if="show">
     <div class="dialog__content" @click.stop>
-      <slot />
+      <slot/>
     </div>
   </div>
 </template>

@@ -1,5 +1,5 @@
-import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router'
-import CatalogView from '../views/CatalogView.vue'
+import {createRouter, createWebHashHistory, RouteRecordRaw} from 'vue-router';
+import CatalogView from '../views/CatalogView.vue';
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -12,11 +12,11 @@ const routes: Array<RouteRecordRaw> = [
     name: 'product',
     component: () => import('../views/ProductView.vue')
   }
-]
+];
 
 const router = createRouter({
   history: createWebHashHistory(),
   routes
-})
+});
 
-export default router
+export default router;

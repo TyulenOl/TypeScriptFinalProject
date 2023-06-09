@@ -86,7 +86,7 @@ export default defineComponent({
 
     watch(cartStore, () => {
       addedToCart.value = cartStore.getProducts.some(prod => props.product && prod.id == props.product.id);
-    })
+    });
 
     return {
       changeFavoriteState,

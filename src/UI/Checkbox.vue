@@ -26,12 +26,12 @@ export default defineComponent({
   },
   setup(props, context) {
     function changeChecked(event: Event) {
-      context.emit('update:checked', (event.target as HTMLInputElement).checked)
+      context.emit('update:checked', (event.target as HTMLInputElement).checked);
     }
 
     return {
       changeChecked
-    }
+    };
   }
 });
 </script>

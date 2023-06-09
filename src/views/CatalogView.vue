@@ -16,7 +16,9 @@
       <p class="not-found__text" v-else>Не нашлось подходящих товаров</p>
       <div class="pagination" v-if="pageCount > 1">
         <button class="pagination__button" v-for="page in pageCount"
-                :key="page" @click="activePage = page" :class="{'pagination__button_active':page === activePage}">{{ page }}</button>
+                :key="page" @click="activePage = page" :class="{'pagination__button_active':page === activePage}">
+          {{ page }}
+        </button>
       </div>
     </div>
     <div class="right-part">
@@ -146,8 +148,8 @@ export default defineComponent({
     );
 
     watch([searchText, chosenCategories], () => {
-      activePage.value = 1
-    })
+      activePage.value = 1;
+    });
 
     return {
       searchText,
