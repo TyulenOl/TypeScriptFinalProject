@@ -9,18 +9,29 @@
         <input class="card__input" type="number" min="1" v-model="product.count">
       </div>
     </div>
+    <button class="delete__button" @click="deleteFromCart(product.id)">
+      <img :src="require('@/assets/images/delete.svg')" alt="">
+    </button>
   </div>
 </template>
 
 <script lang="ts">
 import {defineComponent, PropType} from "vue";
 import {IProduct} from "@/interfaces/product";
+import {useCartStore} from "@/pinia/cart";
 
 export default defineComponent({
   name: "ProductCardInCart",
   props: {
     product: {required: true, type: Object as PropType<IProduct>},
   },
+  setup() {
+    const {deleteFromCart} = useCartStore();
+
+    return {
+      deleteFromCart
+    }
+  }
 });
 </script>
 
@@ -92,5 +103,11 @@ export default defineComponent({
   border: 1px solid #1A1F16;
   border-radius: 8px;
   margin-bottom: 8px;
+}
+
+.delete__button {
+  background: none;
+  border: none;
+  position: absolute;
 }
 </style>

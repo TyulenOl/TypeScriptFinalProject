@@ -32,7 +32,7 @@
 
 <script lang="ts">
 
-import {defineComponent, onMounted, PropType, ref} from "vue";
+import {defineComponent, onMounted, PropType, ref, watch} from "vue";
 import {IProduct} from "@/interfaces/product";
 import {useFavoritesStore} from "@/pinia/favorites";
 import {useCartStore} from "@/pinia/cart";
@@ -81,7 +81,12 @@ export default defineComponent({
 
     onMounted(() => {
       isFavorite.value = favoritesStore.getFavorites.some(id => id == props.product.id);
+      addedToCart.value = cartStore.getProducts.some(prod => props.product && prod.id == props.product.id);
     });
+
+    watch(cartStore, () => {
+      addedToCart.value = cartStore.getProducts.some(prod => props.product && prod.id == props.product.id);
+    })
 
     return {
       changeFavoriteState,
@@ -105,6 +110,7 @@ export default defineComponent({
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
+  background: #ffffff;
   border: 1px solid #eee;
   border-radius: 22px;
   box-shadow: rgba(0, 0, 0, 0.12) 0 2px 4px;
@@ -121,7 +127,6 @@ export default defineComponent({
   width: 100%;
   padding: 32px;
   margin-bottom: 8px;
-  background: #ffffff;
   border-radius: 22px;
   object-fit: contain;
 }

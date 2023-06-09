@@ -1,6 +1,6 @@
 <template>
   <search-input v-model:text="searchText"/>
-  <div class="catalog-container" v-if="filteredProductsByCategories.length">
+  <div class="catalog-container" v-if="sortedProducts.length">
     <div class="left-side">
       <div class="sticky">
         <select-sort :options="sortingOptions" v-model:currentSortType="currentSortType"/>
@@ -8,7 +8,16 @@
       </div>
     </div>
     <div class="middle-part">
-      <product-card v-for="product in filteredProductsByCategories" :key="product.id" :product="product"/>
+      <div class="product-cards" v-if="filteredProductsByCategories.length">
+        <product-card
+            v-for="product in filteredProductsByCategories.slice((activePage - 1) * limit, (activePage - 1) * limit + limit)"
+            :key="product.id" :product="product"/>
+      </div>
+      <p class="not-found__text" v-else>Не нашлось подходящих товаров</p>
+      <div class="pagination" v-if="pageCount > 1">
+        <button class="pagination__button" v-for="page in pageCount"
+                :key="page" @click="activePage = page" :class="{'pagination__button_active':page === activePage}">{{ page }}</button>
+      </div>
     </div>
     <div class="right-part">
       <button class="cart__button" @click="showCart = !showCart">
@@ -28,7 +37,7 @@
 </template>
 
 <script lang="ts">
-import {computed, defineComponent, onMounted, reactive, ref} from 'vue';
+import {computed, defineComponent, onMounted, reactive, ref, watch} from 'vue';
 import ProductCard from '@/components/ProductCard.vue';
 import axios from "axios";
 import {IProduct} from "@/interfaces/product";
@@ -63,9 +72,9 @@ export default defineComponent({
     }
 
     const categoriesOptions = computed<string[]>(() => {
-      const categories = Array.from(new Set(filteredBySearchProducts.value.map(product => product.category)
+      const categories = Array.from(new Set(products.data.map(product => product.category)
           .sort((srt1, srt2) => srt1.localeCompare(srt2))));
-      return favoritesStore.getFavorites.length ? [...categories, 'favorites'] : categories;
+      return [...categories, 'favorites'];
     });
 
     const sortedProducts = computed<IProduct[]>(() => {
@@ -103,7 +112,7 @@ export default defineComponent({
         return;
     });
 
-    const pageCount = computed(() => {
+    const pagesCount = computed(() => {
       return Math.ceil(filteredProductsByCategories.value.length / limit.value);
     });
 
@@ -136,6 +145,10 @@ export default defineComponent({
         }
     );
 
+    watch([searchText, chosenCategories], () => {
+      activePage.value = 1
+    })
+
     return {
       searchText,
       currentSortType,
@@ -147,6 +160,10 @@ export default defineComponent({
       totalAmount,
       showCart,
       totalProductsInCart,
+      pageCount: pagesCount,
+      limit,
+      activePage,
+      sortedProducts
     };
   }
 });
@@ -172,9 +189,17 @@ export default defineComponent({
 
 .middle-part {
   display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.product-cards {
+  display: flex;
+  flex-direction: row;
   justify-content: center;
   flex-wrap: wrap;
   gap: 16px;
+  margin-bottom: 16px;
 }
 
 .right-part {
@@ -216,5 +241,42 @@ export default defineComponent({
   line-height: 24px;
   color: #1A1F16;
   margin-top: 26px;
+}
+
+.pagination {
+  display: flex;
+  column-gap: 28px;
+  background: #FFFFFF;
+  border-radius: 10px;
+  padding: 6px 12px;
+  box-shadow: 0 1px 3px -2px #9098a9;
+}
+
+.pagination__button {
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 18px;
+  background: #FFFFFF;
+  color: #1A1F16;
+  border: none;
+  transition: all .3s ease-in-out;
+}
+
+.pagination__button_active {
+  background: #02D693;
+  color: #FFFFFF;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+.not-found__text {
+  background: #FFFFFF;
+  padding: 20px 28px;
+  border-radius: 12px;
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 24px;
+  color: #1A1F16;
 }
 </style>

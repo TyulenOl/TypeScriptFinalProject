@@ -180,8 +180,8 @@ export default defineComponent({
 
 .title {
   font-weight: 700;
-  font-size: 54px;
-  line-height: 54px;
+  font-size: 48px;
+  line-height: 50px;
   color: #1A1F16;
   margin-bottom: 24px;
 }
@@ -207,7 +207,7 @@ export default defineComponent({
 .description {
   font-weight: 400;
   font-size: 20px;
-  line-height: 24px;
+  line-height: 22px;
   color: #1A1F16;
   margin-bottom: 16px;
 }
