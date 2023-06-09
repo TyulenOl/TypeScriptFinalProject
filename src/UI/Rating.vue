@@ -31,7 +31,7 @@ export default defineComponent({
   width: auto;
   display: block;
   vertical-align: center;
-  margin-right: 24px;
+  margin-right: 12px;
   margin-bottom: 8px;
 }
 

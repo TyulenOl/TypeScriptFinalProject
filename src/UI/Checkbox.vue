@@ -1,6 +1,6 @@
 <template>
   <div class="checkbox-group">
-    <input class="checkbox-group__input" @input="(event) => $emit('update:checked', event.target.checked)"
+    <input class="checkbox-group__input" @input="changeChecked"
            type="checkbox"
            :checked="checked"
            :id="fieldId"
@@ -24,6 +24,15 @@ export default defineComponent({
       type: Boolean,
     },
   },
+  setup(props, context) {
+    function changeChecked(event: Event) {
+      context.emit('update:checked', (event.target as HTMLInputElement).checked)
+    }
+
+    return {
+      changeChecked
+    }
+  }
 });
 </script>
 

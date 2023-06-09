@@ -11,16 +11,16 @@ export const useFavoritesStore = defineStore('favoritesStore', {
     }
   },
   getters: {
-    getFavoritesProducts(): number[] {
+    getFavorites(): number[] {
       return [...this.favorites]
     }
   },
   actions: {
-    deleteFavoriteProduct(id: number): void {
+    deleteFavorite(id: number): void {
       this.favorites.splice(this.favorites.indexOf(id), 1)
     },
 
-    addFavoriteProduct(id: number): void {
+    addFavorite(id: number): void {
       this.favorites.push(id)
     }
   }

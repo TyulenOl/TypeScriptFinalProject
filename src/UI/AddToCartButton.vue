@@ -1,5 +1,5 @@
 <template>
-  <button class="product__add-to-cart"/>
+  <button class="add-to-cart"/>
 </template>
 
 <script>
@@ -9,7 +9,7 @@ export default {
 </script>
 
 <style scoped>
-.product__add-to-cart {
+.add-to-cart {
   cursor: pointer;
   background: #1A1F16 url("@/assets/images/bag-add.svg") no-repeat center;
   background-size: 15px;
@@ -21,23 +21,23 @@ export default {
   z-index: 1;
 }
 
-.product__add-to-cart:hover {
+.add-to-cart:hover {
   background-color: #40453d;
 }
 
-.product__add-to-cart:active {
+.add-to-cart:active {
   background-color: #12805D;
 }
 
-.product__add-to-cart_added {
+.add-to-cart_added {
   background: #02D693 url("@/assets/images/bag-added.svg") no-repeat center;
 }
 
-.product__add-to-cart_added:hover {
+.add-to-cart_added:hover {
   background-color: #12805D;
 }
 
-.product__add-to-cart_added:active {
+.add-to-cart_added:active {
   background-color: #E5252C;
 }
 </style>
